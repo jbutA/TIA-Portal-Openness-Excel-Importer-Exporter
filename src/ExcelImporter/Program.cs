@@ -94,7 +94,7 @@ namespace ExcelImporter
                 }
 
                 //2.Open Excel sheet
-                string[] files = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.xlsx");
+                string[] files = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.csv");
                 var allScreens = GetScreens(software);
                 //iterate over every file
                 foreach (string file in files)
