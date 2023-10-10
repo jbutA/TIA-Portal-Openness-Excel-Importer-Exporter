@@ -112,7 +112,7 @@ namespace ExcelExporter
 
                 var differences = GetDifferences(screenDict.Value, defaultValues, setProperties);
 
-                string filename = Directory.GetCurrentDirectory() + "\\" + screenDict.Key + ".xlsx";
+                string filename = Directory.GetCurrentDirectory() + "\\" + screenDict.Key + ".csv";
                 Microsoft.Office.Interop.Excel.Application xlApp = null;
                 Microsoft.Office.Interop.Excel.Workbook workbook = null;
                 Microsoft.Office.Interop.Excel.Worksheet worksheet = null;
