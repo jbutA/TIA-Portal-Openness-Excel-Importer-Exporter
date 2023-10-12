@@ -442,7 +442,13 @@ namespace ExcelImporter
                 {
                     if (keys.Length == 4)
                     {
-                        temp = (TagDynamization)findMethod.Invoke((DynamizationBaseComposition)findMethod.Invoke(comp, new object[] { keys[dynStart - 2] }), new object[] { keys[dynStart - 1] }) ?? (screenItem.GetAttribute(keys[dynStart - 2]) as UIBase).Dynamizations.Create<TagDynamization>(keys[dynStart - 1]);
+                        var comp2 = (DynamizationBaseComposition)findMethod.Invoke(comp, new object[] { keys[dynStart - 2] });
+                        TagDynamization dynActual = null;
+                        if (comp2 != null)
+                        {
+                            dynActual = (TagDynamization)findMethod.Invoke(comp2, new object[] { keys[dynStart - 1] });
+                        }
+                        temp = dynActual ?? (screenItem.GetAttribute(keys[dynStart - 2]) as UIBase).Dynamizations.Create<TagDynamization>(keys[dynStart - 1]);
                     }
                     else if (keys.Length > 4) {
                         throw new NotImplementedException("Recursive creation of tag dynamization not yet implementated.");
