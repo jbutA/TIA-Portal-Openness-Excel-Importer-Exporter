@@ -166,7 +166,7 @@ namespace ExcelImporter
                                 }
                             }
                             CreateScreenItem(screen, propertyNameValues);
-                            Console.WriteLine();
+                            //Console.WriteLine();
                             tableRow++;
                         }
 
@@ -203,7 +203,7 @@ namespace ExcelImporter
             propertyNameValues.Remove("Name");
             string sType = propertyNameValues["Type"].ToString();
             propertyNameValues.Remove("Type");
-            Console.WriteLine("CreateScreenItem: " + sName + " of type " + sType);
+            //Console.WriteLine("CreateScreenItem: " + sName + " of type " + sType); TODO: debug message
             Type type = null;
             if (sType == "HmiLine" || sType == "HmiPolyline" || sType == "HmiPolygon" || sType == "HmiEllipse" || sType == "HmiEllipseSegment"
                 || sType == "HmiCircleSegment" || sType == "HmiEllipticalArc" || sType == "HmiCircularArc" || sType == "HmiCircle" || sType == "HmiRectangle"
@@ -259,8 +259,8 @@ namespace ExcelImporter
                 {
                     continue;
                 }
-                else { 
-                    Console.WriteLine("Will try to set Property '" + propertyNameValue.Key + "' with value '" + propertyNameValue.Value + "'.");
+                else {
+                    //Console.WriteLine("Will try to set Property '" + propertyNameValue.Key + "' with value '" + propertyNameValue.Value + "'."); TODO: debug message
                     try
                     {
                         //cover # Attributes
@@ -285,7 +285,7 @@ namespace ExcelImporter
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Cannot set property '" + propertyNameValue.Key + "' with value '" + propertyNameValue.Value + "'.");
+                        Console.WriteLine("Cannot set property '" + propertyNameValue.Key + "' with value '" + propertyNameValue.Value + "': " + ex.Message);
                     }
                 }
             }
@@ -440,7 +440,17 @@ namespace ExcelImporter
                 }
                 else
                 {
-                    temp = (TagDynamization)findMethod.Invoke(comp, new object[] { keys[dynStart - 1] }) ?? screenItem.Dynamizations.Create<TagDynamization>(keys[dynStart - 1]);
+                    if (keys.Length == 4)
+                    {
+                        temp = (TagDynamization)findMethod.Invoke((DynamizationBaseComposition)findMethod.Invoke(comp, new object[] { keys[dynStart - 2] }), new object[] { keys[dynStart - 1] }) ?? (screenItem.GetAttribute(keys[dynStart - 2]) as UIBase).Dynamizations.Create<TagDynamization>(keys[dynStart - 1]);
+                    }
+                    else if (keys.Length > 4) {
+                        throw new NotImplementedException("Recursive creation of tag dynamization not yet implementated.");
+                    }
+                    else
+                    {
+                        temp = (TagDynamization)findMethod.Invoke(comp, new object[] { keys[dynStart - 1] }) ?? screenItem.Dynamizations.Create<TagDynamization>(keys[dynStart - 1]);
+                    }
                 }
                 SetPropertyRecursive(keys[dynStart + 1], value.ToString(), (temp as IEngineeringObject));
             }
